@@ -13,7 +13,7 @@ jobs:
         run: echo LINT
 
   test:
-    needs: [build, lint]
+    needs: [lint]
     runs-on: windows-latest
     steps:
       - name: Setup VSTest.exe
@@ -28,4 +28,3 @@ jobs:
         with:
           name: my-artifact
           path: x64\Release
-
