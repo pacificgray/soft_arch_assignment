@@ -21,7 +21,7 @@ jobs:
       
       - name: RunTests
         working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: VSTest.Console.exe x64\Release\UnitTest1.dll
+        run: VSTest.Console.exe Pipeplines\PipeplinesExe.exe
 
       - name: DownloadBinaries
         uses: actions/download-artifact@v3
