@@ -23,7 +23,6 @@ jobs:
         run: wmic logicaldisk get caption
 
       - name: RunTests
-        working-directory: soft_arch_assignment
         run: VSTest.Console.exe UnitTest1.dll
 
       - name: UploadBinaries
