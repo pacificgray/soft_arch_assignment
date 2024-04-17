@@ -19,16 +19,16 @@ jobs:
       - name: Setup VSTest.exe
         uses: Malcolmnixon/Setup-VSTest@v4
 
-      - name: Print Workspace Contents
-        run: Get-ChildItem ${{ github.workspace }}
-        shell: pwsh
+      - name: Create Release Directory
+        run: mkdir -p x64\Release
 
       - name: RunTests
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: VSTest.Console.exe Pipeplines\x64\Release\UnitTest1.dll
+        working-directory: ${{env.GITHUB_WORKSPACE}}\soft_arch_assignment
+        run: VSTest.Console.exe UnitTest1.dll
 
-      - name: DownloadBinaries
-        uses: actions/download-artifact@v3
+      - name: UploadBinaries
+        uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: Pipeplines\x64\Release
+          path: x64\Release
+          if-no-files-found: error
