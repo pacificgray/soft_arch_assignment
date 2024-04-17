@@ -29,10 +29,10 @@ jobs:
         run: dir D:\  # Replace D: with the appropriate drive letter if needed
 
       - name: Print soft_arch_assignment Contents
-        run: dir ${{ env.GITHUB_WORKSPACE }}\soft_arch_assignment
+        run: dir ${{ env.GITHUB_WORKSPACE }}/soft_arch_assignment
 
       - name: RunTests
-        working-directory: ${{env.GITHUB_WORKSPACE}}\soft_arch_assignment
+        working-directory: ${{env.GITHUB_WORKSPACE}}/soft_arch_assignment
         run: VSTest.Console.exe UnitTest1.dll
 
       - name: UploadBinaries
