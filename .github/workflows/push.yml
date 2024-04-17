@@ -6,37 +6,41 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: RunLint
-        run: echo "LINT"
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: echo LINT
 
   test:
     needs: [lint]
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
+      - name: Setup VSTest.exe
+        uses: Malcolmnixon/Setup-VSTest@v4
+
       - name: Print Available Drives
-        run: lsblk -o NAME,MOUNTPOINT | grep -E '^[a-z]' | awk '{print $2}'
+        run: wmic logicaldisk get caption
 
       - name: Print Drive Contents
         run: |
-          mountpoints=$(lsblk -o NAME,MOUNTPOINT | grep -E '^[a-z]' | awk '{print $2}')
-          for mountpoint in $mountpoints; do
-            echo "Contents of mount point $mountpoint:"
-            ls -l "$mountpoint"
-          done
+          $drives = wmic logicaldisk get caption | Select-String -Pattern "[A-Z]:"
+          foreach ($drive in $drives) {
+            $driveLetter = $drive -replace "[^A-Z]", ""
+            Write-Output "Contents of drive $driveLetter:"
+            dir "$driveLetter:\" /s
+          }
 
       - name: Print soft_arch_assignment Contents
-        run: ls -l $GITHUB_WORKSPACE/soft_arch_assignment
+        run: dir ${{ env.GITHUB_WORKSPACE }}/soft_arch_assignment
 
-      - name: Run Tests
-        run: |
-          # Replace this with your actual test commands
-          echo "Running tests..."
-          # Example: npm test, pytest, etc.
+      - name: RunTests
+        working-directory: ${{env.GITHUB_WORKSPACE}}/soft_arch_assignment
+        run: VSTest.Console.exe UnitTest1.dll
 
-      - name: Upload Artifacts
+      - name: UploadBinaries
         uses: actions/upload-artifact@v3
         with:
-          name: test-results
-          path: path/to/your/test/results
+          name: my-artifact
+          path: x64\Release
+          if-no-files-found: error
