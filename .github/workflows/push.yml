@@ -22,8 +22,11 @@ jobs:
       - name: Create Release Directory
         run: mkdir -p x64\Release
 
-      - name: Print Root Directory Contents
-        run: dir ${{ env.GITHUB_WORKSPACE }}
+      - name: Print Available Drives
+        run: wmic logicaldisk get caption
+
+      - name: Print Root Contents
+        run: dir D:\  # Replace D: with the appropriate drive letter if needed
 
       - name: Print soft_arch_assignment Contents
         run: dir ${{ env.GITHUB_WORKSPACE }}\soft_arch_assignment
