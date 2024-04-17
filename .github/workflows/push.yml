@@ -5,22 +5,33 @@ on:
     branches: [main]
 
 jobs:
-  dummy:
-    runs-on: ubuntu-latest
+  lint:
+    runs-on: windows-latest
 
     steps:
-    - name: Dummy Step
-      run: echo "This is a dummy job."
+    - name: RunLint
+      run: echo LINT
 
   test:
-    needs: [build, lint]
+    needs: [lint]
     runs-on: windows-latest
 
     steps:
     - name: Setup VSTest.exe
       uses: Malcolmnixon/Setup-VSTest@v4
 
+    - name: DownloadBinaries
+      uses: actions/download-artifact@v3
+      with:
+        name: my-artifact
+
     - name: RunTests
-      working-directory: ${{env.GITHUB_WORKSPACE}}
       run: VSTest.Console.exe x64\Release\UnitTest1.dll
+
+    - name: UploadBinaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: x64\Release\ # or path/to/artifact
+      if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to 'warn'
 
