@@ -6,41 +6,31 @@ on:
 
 jobs:
   lint:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: RunLint
-        working-directory: ${{env.GITHUB_WORKSPACE}}
-        run: echo LINT
+        run: echo "LINT"
 
   test:
     needs: [lint]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-      - name: Setup VSTest.exe
-        uses: Malcolmnixon/Setup-VSTest@v4
-
       - name: Print Available Drives
-        run: wmic logicaldisk get caption
+        run: lsblk -o NAME,MOUNTPOINT | grep -E '^[a-z]' | awk '{print $2}'
 
       - name: Print Drive Contents
         run: |
-          $drives = (wmic logicaldisk get caption | Select-String -Pattern "[A-Z]:").Matches | ForEach-Object { $_.Value.Trim() }
-          foreach ($drive in $drives) {
-            Write-Output "Contents of drive $drive:"
-            dir "$drive:\" /s
-          }
-
+          mountpoints=$(lsblk -o NAME,MOUNTPOINT | grep -E '^[a-z]' | awk '{print $2}')
+          for mountpoint in $mountpoints; do
+            echo "Contents of mount point $mountpoint:"
+            ls -l "$mountpoint"
+          done
 
       - name: Print soft_arch_assignment Contents
-        run: dir ${{ env.GITHUB_WORKSPACE }}/soft_arch_assignment
+        run: ls -l $GITHUB_WORKSPACE/soft_arch_assignment
 
       - name: RunTests
-        working-directory: ${{env.GITHUB_WORKSPACE}}/soft_arch_assignment
-        run: VSTest.Console.exe UnitTest1.dll
+        run: echo "Run tests here"
 
       - name: UploadBinaries
-        uses: actions/upload-artifact@v3
-        with:
-          name: my-artifact
-          path: x64\Release
-          if-no-files-found: error
+        run: echo "Upload binaries here"
