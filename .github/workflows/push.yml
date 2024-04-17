@@ -22,15 +22,6 @@ jobs:
       - name: Print Available Drives
         run: wmic logicaldisk get caption
 
-      - name: Print Drive Contents
-        run: |
-          $drives = wmic logicaldisk get caption | Select-String -Pattern "[A-Z]:"
-          foreach ($drive in $drives) {
-            $driveLetter = $drive -replace "[^A-Z]", ""
-            Write-Output "Contents of drive $driveLetter:"
-            dir "$driveLetter:\" /s
-          }
-
       - name: RunTests
         working-directory: soft_arch_assignment
         run: VSTest.Console.exe UnitTest1.dll
