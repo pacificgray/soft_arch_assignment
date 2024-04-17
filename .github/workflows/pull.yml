@@ -4,3 +4,28 @@ on:
   pull_request:
     branches: [main]
 
+jobs:
+  lint:
+    runs-on: windows-latest
+    steps:
+      - name: RunLint
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: echo LINT
+
+  test:
+    needs: [build, lint]
+    runs-on: windows-latest
+    steps:
+      - name: Setup VSTest.exe
+        uses: Malcolmnixon/Setup-VSTest@v4
+      
+      - name: RunTests
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: VSTest.Console.exe x64\Release\UnitTest1.dll
+
+      - name: DownloadBinaries
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+          path: x64\Release
+
