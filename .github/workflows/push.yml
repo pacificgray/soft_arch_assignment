@@ -24,12 +24,12 @@ jobs:
 
       - name: Print Drive Contents
         run: |
-          $drives = wmic logicaldisk get caption | Select-String -Pattern "[A-Z]:"
+          $drives = (wmic logicaldisk get caption | Select-String -Pattern "[A-Z]:").Matches | ForEach-Object { $_.Value.Trim() }
           foreach ($drive in $drives) {
-            $driveLetter = $drive -replace "[^A-Z]", ""
-            Write-Output "Contents of drive $driveLetter:"
-            dir "$driveLetter:\" /s
+            Write-Output "Contents of drive $drive:"
+            dir "$drive:\" /s
           }
+
 
       - name: Print soft_arch_assignment Contents
         run: dir ${{ env.GITHUB_WORKSPACE }}/soft_arch_assignment
