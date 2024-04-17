@@ -22,10 +22,13 @@ jobs:
       - name: Create Release Directory
         run: mkdir -p x64\Release
 
-      - name: RunTests
-        working-directory: ${{env.GITHUB_WORKSPACE}}
+      - name: Print soft_arch_assignment Contents
         run: |
-          cd soft_arch_assignment
+          dir ${{ env.GITHUB_WORKSPACE }}\soft_arch_assignment
+
+      - name: RunTests
+        working-directory: ${{env.GITHUB_WORKSPACE}}\soft_arch_assignment
+        run: |
           VSTest.Console.exe UnitTest1.dll
 
       - name: UploadBinaries
