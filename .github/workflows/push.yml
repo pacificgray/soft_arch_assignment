@@ -20,8 +20,8 @@ jobs:
         uses: Malcolmnixon/Setup-VSTest@v4
 
       - name: Print Workspace Contents
-        run: |
-          ls ${{ github.workspace }}
+        run: Get-ChildItem ${{ github.workspace }}
+        shell: pwsh
 
       - name: RunTests
         working-directory: ${{env.GITHUB_WORKSPACE}}
