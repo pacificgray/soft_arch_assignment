@@ -5,6 +5,13 @@ on:
     branches: [main]
 
 jobs:
+  dummy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Dummy Step
+      run: echo "This is a dummy job."
+
   test:
     needs: [build, lint]
     runs-on: windows-latest
